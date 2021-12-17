@@ -1,0 +1,52 @@
+version: "3"
+
+services : 
+  servidor1 :  
+    build : 
+      context : .
+      dockerfile : /home/administrador/Documentos/Treinamento/dezembro/rabbitmq/SomaPost/produtor.dockerfile
+    image: backend/produtor_post
+    container_name : servidor1_Produtor_post
+    ports : 
+      - "3001:3001"
+    volumes :
+      - /home/administrador/Documentos/Treinamento/dezembro/rabbitmq/SomaPost/produtor:/produtor
+    depends_on : 
+      - rabbitmq
+    networks :   
+      - container_Rede
+
+  servidor2 :  
+    build : 
+      context : .
+      dockerfile : /home/administrador/Documentos/Treinamento/dezembro/rabbitmq/SomaPost/consumidor.dockerfile
+    image: backend/consumidor_post
+    container_name : servidor2_Consumidor_post
+    ports : 
+      - "3002:3002"
+    volumes :
+      - /home/administrador/Documentos/Treinamento/dezembro/rabbitmq/SomaPost/consumidor:/consumidor
+    depends_on : 
+      - rabbitmq
+    networks :   
+      - container_Rede
+   
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_fila
+    ports:
+        - 5672:5672
+        - 15672:15672
+        - 25676:25676 
+    networks :   
+      - container_Rede
+      
+networks:
+  container_Rede : 
+    driver : bridge
+    
+
+
+  
+
+ 
